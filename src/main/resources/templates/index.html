@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="template :: site-head">
+</head>
+<body>
+	<div class="container">
+
+		<div class="row">
+			
+			<br />
+			
+		</div>
+		<div class="row">
+			<br />
+		</div>
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="row">
+					<div class="col-md-6">
+						<button type="button" data-toggle="modal"
+							data-target="#modal-add-config" class="btn btn-primary add">
+							Add Configuration</button>
+					</div>
+					<div class="col-md-6">
+						<form class="form-horizontal" id="searchconfig"
+							name="searchconfig" th:action="@{/search}" method="get">
+							<input placeholder="name for search" class="form-control"
+								type="text" name="name" />
+							<button class="form-control btn-success" type="submit">Search!</button>
+						</form>
+					</div>
+				</div>
+				<!-- add member modal starts -->
+				<div class="modal fade" id="modal-add-config" role="dialog"
+					aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<form class="form-horizontal" id="addconfig" name="addconfig"
+							th:action="@{/}" th:object="${configuration}" method="post">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal"
+										aria-hidden="true">*</button>
+									<h4 class="modal-title">Add Configuration</h4>
+								</div>
+								<div class="modal-body">
+									<div class="form-group">
+										<label class="control-label col-sm-2">Name</label>
+										<div class="col-sm-10">
+											<input class="form-control" th:field="*{name}" type="text"
+												placeholder="Name" />
+										</div>
+										<td th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name
+											Error</td>
+									</div>
+									<div class="form-group">
+										<label for="typesel" class="control-label col-sm-2">Type
+											: </label>
+										<div class="col-sm-10">
+											<select onchange="typeChanged(this, '.value-create')"
+												th:field="*{type}" class="form-control col-sm-10" id="sel1">
+												<option value="String">String</option>
+												<option value="Boolean">Boolean</option>
+												<option value="Integer">Integer</option>
+												<option value="Double">Double</option>
+											</select>
+										</div>
+										<td th:if="${#fields.hasErrors('type')}" th:errors="*{type}">Type
+											Error</td>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-sm-2">Value</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control value-create"
+												name="value" id="value" th:field="*{value}"
+												placeholder="Value" />
+										</div>
+										<td th:if="${#fields.hasErrors('value')}" th:errors="*{value}">Value
+											Error</td>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-sm-2">Is Active? </label>
+										<div class="col-sm-2">
+
+											<input class="form-control" th:field="*{isActive}"
+												type="checkbox" value="True" />
+										</div>
+										<td th:if="${#fields.hasErrors('isActive')}"
+											th:errors="*{isActive}">is Active Error</td>
+
+									</div>
+									<div class="form-group">
+										<label class="control-label col-sm-2">Application name</label>
+										<div class="col-sm-10">
+											<input class="form-control" th:field="*{applicationName}"
+												type="text" placeholder="Application Name" />
+										</div>
+										<td th:if="${#fields.hasErrors('applicationName')}"
+											th:errors="*{applicationName}">Application Name Error</td>
+									</div>
+									<input class="id" th:field="*{id}" hidden="true" type="text" />
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default"
+										data-dismiss="modal">Close</button>
+									<button type="submit" class="btn btn-primary">Save</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<!-- add member modal ends -->
+				<table class="table table-hover table-bordered">
+					<thead>
+						<tr>
+							<th>No</th>
+							<th>Name</th>
+							<th>Type</th>
+							<th>Value</th>
+							<th>Is Active</th>
+							<th>Application Name</th>
+						</tr>
+					</thead>
+					<tbody th:fragment="configs" th:each="config,iterStat : ${configs}">
+						<tr>
+							<td th:text="${iterStat.count}"></td>
+							<td class="name" th:text="${config.name}"></td>
+							<td class="type" th:text="${config.type}"></td>
+							<td class="value" th:text="${config.value}"></td>
+							<td class="isactive" th:text="${config.isActive}"></td>
+							<td class="applicationname" th:text="${config.applicationName}"></td>
+							<td class="id" hidden="true" th:text="${config.id}"></td>
+							<td>
+								<button type="button" class="btn btn-warning edit">
+									Edit</button> <!-- edit member modal starts -->
+								<div class="modal fade" id="modal-edit-config" role="dialog"
+									aria-labelledby="myModalLabel" aria-hidden="true">
+									<div class="modal-dialog">
+										<form class="form-horizontal" id="editconfig"
+											name="editconfig" th:action="@{/}"
+											th:object="${configuration}" method="post">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal"
+														aria-hidden="true">*</button>
+													<h4 class="modal-title">Edit Configuration</h4>
+												</div>
+												<div class="modal-body" th:fragment="configs">
+													<div class="form-group">
+														<label class="control-label col-sm-2">Name</label>
+														<div class="col-sm-10">
+															<input class="form-control" th:field="*{name}"
+																type="text" placeholder="Name" />
+														</div>
+														<td th:if="${#fields.hasErrors('name')}"
+															th:errors="*{name}">Name Error</td>
+													</div>
+													<div class="form-group">
+														<label for="typesel" class="control-label col-sm-2">Type
+														</label>
+														<div class="col-sm-10">
+															<select onchange="typeChanged(this, '.value-update')"
+																th:field="*{type}" class="form-control col-sm-10"
+																id="sel1">
+																<option value="String">String</option>
+																<option value="Boolean">Boolean</option>
+																<option value="Integer">Integer</option>
+																<option value="Double">Double</option>
+															</select>
+														</div>
+														<td th:if="${#fields.hasErrors('type')}"
+															th:errors="*{type}">Type Error</td>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-2">Value</label>
+														<div class="col-sm-10">
+															<input type="text" step="1"
+																class="form-control value-update" name="value"
+																id="value" th:field="*{value}" placeholder="Value" />
+														</div>
+														<td th:if="${#fields.hasErrors('value')}"
+															th:errors="*{value}">Value Error</td>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-2">Is Active? </label>
+														<div class="col-sm-2">
+
+															<input class="form-control" th:field="*{isActive}"
+																type="checkbox" value="True" />
+														</div>
+														<td th:if="${#fields.hasErrors('isActive')}"
+															th:errors="*{isActive}">is Active Error</td>
+
+													</div>
+
+													<div class="form-group">
+														<label class="control-label col-sm-2">Application
+															name</label>
+														<div class="col-sm-10">
+															<input class="form-control" th:field="*{applicationName}"
+																type="text" placeholder="Application Name" />
+														</div>
+														<td th:if="${#fields.hasErrors('applicationName')}"
+															th:errors="*{applicationName}">Application Name
+															Error</td>
+													</div>
+													<input class="id" th:field="*{id}" hidden="true"
+														type="text" />
+
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-default"
+														data-dismiss="modal">Close</button>
+													<button type="submit" class="btn btn-primary">Save
+														changes</button>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div> <!-- edit member modal ends -->
+
+								<button type="button" th:attr="data-href=${config.id}"
+									data-toggle="modal" data-target="#modal-delete-config"
+									class="btn btn-danger">Delete</button>
+
+								<div class="modal fade" id="modal-delete-config" role="dialog">
+									<div class="modal-dialog">
+										i
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal"
+													aria-hidden="true">*</button>
+												<h4 class="modal-title">Delete Config</h4>
+											</div>
+											<div class="modal-body">
+												<p>Do you really want to delete this Configuration?</p>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-default"
+													data-dismiss="modal">Close</button>
+												<button type="button"
+													th:onclick="'javascript:onDelete(this)'"
+													class="btn btn-primary btn-ok">Delete Config</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<section id="site-footer" th:replace="template :: site-footer-js"></section>
+</body>
+</html>
